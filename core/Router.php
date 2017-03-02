@@ -35,7 +35,6 @@ class Router
                 $controller = "controllers\\" .  ucfirst(array_shift($parts) . "Controller");
                 $action = lcfirst(array_shift($parts));
                 $params = $parts;
-                echo $controller . " " . $action ;
                 $this->createController($controller,$action,$params);
     }
     
@@ -50,22 +49,23 @@ class Router
      */
     protected function createController($controller,$action,$params) {
         $object = new $controller();
-        $object->$action($params);
+        call_user_func_array(array($object, $action), $params);
     }
     
     /**
      * Find a program route, which will
      * consist of  controller,action and params
      * 
-     * @return array
+     * @return string
      */
     protected function findProgramRoute(){
         foreach ($this->routes as $uriPattern => $path) {
             if (preg_match("~$uriPattern~", $this->uri)) {
                 $programRoute = preg_replace("~$uriPattern~", $path, $this->uri);
-                return $programRoute;
+                break;
             }
         }
+        return $programRoute;
     }
     /**
      * Get an URI from request

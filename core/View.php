@@ -47,7 +47,7 @@ class View {
      * 
      * @return void
      */
-    public function display($view,$data){
+    public function display($view,$data = null){
         include_once "views/{$this->header}.php";
         $this->setView($view);
         include_once "views/{$this->view}.php";

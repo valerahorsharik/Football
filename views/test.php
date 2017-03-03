@@ -1,4 +1,1 @@
-hello, world.
-<?php
-var_dump($_SESSION);
-?>
+hello, <?= (empty($_SESSION['userName']))?'Guest':$_SESSION['userName'] ?>.

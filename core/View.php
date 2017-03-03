@@ -131,6 +131,7 @@ class View {
      * @return void
      */
     protected function notFound($source) {
+        $source = " 'View:{$source}'.";
         include_once "views/errors/404.php";
     }
 }

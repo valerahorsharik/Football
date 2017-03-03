@@ -116,7 +116,8 @@ class vk {
                     $this->userData['email'],
                     $this->userData['photo_100'],
                     $this->userData['user_id']]);
-        
+        $_SESSION['userName'] = $this->userData['first_name'];
+        header('Location:/');
     }
 
 }

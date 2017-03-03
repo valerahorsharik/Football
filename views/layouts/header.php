@@ -10,14 +10,18 @@
     <link href="public/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="public/css/main.css" rel="stylesheet">
-
   </head>
 
   <body>
       <div class="header">
           <div class="container">
-              <div class="col-md-2 text-left" id="logo">
-                  <a  href="/">Football The Game</a>
+              <div class="col-md-2 text-left" >
+                  <a id="logo"  href="/">Football The Game</a>
+              </div>
+              <div class="col-md-3 col-md-offset-7 text-right">
+                  <div>
+                      <a href="/login">login</a>
+                  </div>
               </div>
           </div>
       </div>

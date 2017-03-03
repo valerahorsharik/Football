@@ -16,6 +16,7 @@ class RegistrationController extends Controller {
     public function vk() {
         $code = $_GET['code'];
         $vk = new vk($code);
+        $vk->login();
     }
 
 }

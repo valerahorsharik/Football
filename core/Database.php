@@ -43,7 +43,15 @@ class Database {
     public static function __callStatic($method, $args) {
         return call_user_func_array(array(self::instance(), $method), $args);
     }
-
+    
+    /**
+     * 
+     * Execute a prepared $sql query with $args
+     * 
+     * @param string $sql
+     * @param array $args
+     * @return \PDOstatement
+     */
     public static function run($sql, $args = []) {
         $stmt = self::instance()->prepare($sql);
         $stmt->execute($args);

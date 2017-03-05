@@ -1,8 +1,12 @@
 <?php
 return array(
     //Registration routes
-    'login' => 'registration/loginForm',
+
     'auth/social/vk/*' => 'registration/vk/$1',
+    
+    //User's routes
+    'logout' => 'user/logout',
+    'login' => 'user/login',
     
     '' => 'home/index',
 );

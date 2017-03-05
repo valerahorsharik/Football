@@ -20,10 +20,11 @@
               </div>
               <div class="col-md-3 col-md-offset-7 text-right">
                   <div>
-                      <?php if(empty($_SESSION['userName'])):?>
+                      <?php if(empty($_SESSION['user'])):?>
                         <a href="/login">login</a>
                       <?php else:?>
                         <a href="#">profile</a>
+                        <a href="/logout">logout</a>
                       <?php endif;?>
                   </div>
               </div>

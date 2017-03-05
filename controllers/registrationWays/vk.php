@@ -32,15 +32,7 @@ class vk {
 
     /**
      *
-     * Contains temporary code for access token
-     * 
-     * @var int
-     */
-    private $code = null;
-
-    /**
-     *
-     * Contains user's data
+     * Contains user's data from VK api .
      * 
      * @var array
      */
@@ -48,12 +40,20 @@ class vk {
 
     /**
      *
-     * Consist name of fields, which we wanna get from VK api
+     * Consist name of fields, which we wanna get from VK api.
      * 
      * @var array
      */
     private $necessaryData = ['email',
         'user_id', 'first_name', 'last_name', 'photo_100'];
+    
+    /**
+     *
+     * User id from DB.
+     * 
+     * @var int
+     */
+    private $id = null;
 
     public function __construct($code) {
         $this->getAccessToken($code);
@@ -61,7 +61,7 @@ class vk {
 
     /**
      * 
-     * Get access token from VK
+     * Get access token from VK.
      * 
      * @param int $code Contain temporary code for get access token
      */
@@ -105,19 +105,48 @@ class vk {
     }
 
     /**
-     * Check if the users allready in DB,
+     * 
+     * Check if the user already registered,
      * if yes - just login,
      * otherwise - register him and login
+     * 
+     * @return void
      */
-    public function login() {
+    public function tryToLogin(){
+        $this->id = DB::run("SELECT id FROM users WHERE vk_id = ?", [$this->userData['user_id']])->fetchColumn();
+        if($this->id === FALSE || is_null($this->id)){
+            $this->registration();
+        } 
+        $this->login();
+    }
+    
+    /**
+     * 
+     * Set user's data in the session(login)
+     * and redirect him to the main page.
+     * 
+     * @return void
+     */
+    private function login() {
+        $_SESSION['user']['id'] = $this->id;
+        $_SESSION['user']['name'] = $this->userData['first_name'];
+        header('Location:/');
+    }
+    
+    /**
+     * 
+     * Register a new user
+     * 
+     * @return void
+     */
+    private function registration() {
         $stmt = DB::run("INSERT INTO users VALUES(NULL,?,?,?,?,?)", [
                     $this->userData['first_name'],
                     $this->userData['last_name'],
                     $this->userData['email'],
                     $this->userData['photo_100'],
                     $this->userData['user_id']]);
-        $_SESSION['userName'] = $this->userData['first_name'];
-        header('Location:/');
+        $this->id = DB::lastInsertId();
     }
 
 }

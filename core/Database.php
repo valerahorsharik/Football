@@ -33,8 +33,9 @@ class Database {
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
                 \PDO::ATTR_EMULATE_PREPARES => TRUE,
+                \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'',
             );
-            $dsn = "mysql:host={$config['host']};dbname={$config['username']};charset=utf8";
+            $dsn = "mysql:host={$config['host']};dbname={$config['username']};charset=UTF8";
             self::$instance = new \PDO($dsn, $config['username'], $config['password'], $opt);
         }
         return self::$instance;

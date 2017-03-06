@@ -4,7 +4,7 @@ namespace controllers;
 
 use core\Controller as Controller;
 use controllers\registrationWays\vk as vk;
-use controllers\registrationWays\vk as fb;
+use controllers\registrationWays\fb as fb;
 
 class RegistrationController extends Controller {
    
@@ -23,7 +23,9 @@ class RegistrationController extends Controller {
      * @see controllers\registrationWays\fb
      */
     public function fb() {
-        $fb = new $fb();
+        $code = $_GET['code'];
+        $fb = new fb($code);
+        $fb->tryToLogin();
     }
      
 }

@@ -1,12 +1,11 @@
 <?php
 
-
 namespace controllers\registrationWays;
 
 use core\Database as DB;
 
 class fb {
-    
+
     /**
      *
      * Id of my FB application
@@ -29,7 +28,7 @@ class fb {
      * 
      * @var string
      */
-    private $redirect_uri = 'http://pretty-simple.mcdir.ru/auth/social/fb/';
+    private $redirect_uri = 'http://football.mcdir.ru/auth/social/fb/';
 
     /**
      *
@@ -47,7 +46,7 @@ class fb {
      */
     private $necessaryData = ['email',
         'id', 'first_name', 'last_name', 'picture'];
-    
+
     /**
      *
      * User id from DB.
@@ -55,7 +54,7 @@ class fb {
      * @var int
      */
     private $id = null;
-    
+
     /**
      *
      * User email from DB.
@@ -63,11 +62,11 @@ class fb {
      * @var string
      */
     private $email = null;
-    
+
     public function __construct($code) {
         $this->getAccessToken($code);
     }
-    
+
     /**
      * 
      * Get access token from FB.
@@ -82,7 +81,7 @@ class fb {
         curl_close($ch);
         $this->getUsersDataWithToken($answer->access_token);
     }
-    
+
     /**
      * 
      * Get all necessary data from FB 
@@ -107,7 +106,7 @@ class fb {
     private function setUsersData($data) {
         foreach ($this->necessaryData as $nameOfField) {
             if (isset($data->$nameOfField)) {
-                if($nameOfField == "picture"){
+                if ($nameOfField == "picture") {
                     $this->userData[$nameOfField] = $data->$nameOfField->data->url;
                     continue;
                 }
@@ -124,14 +123,29 @@ class fb {
      * 
      * @return void
      */
-    public function tryToLogin(){
-        $this->id = DB::run("SELECT id FROM users WHERE fb_id = ?", [$this->userData['id']])->fetchColumn();
-        if($this->id === FALSE || is_null($this->id)){
-            $this->registration();
-        } 
+    public function tryToLogin() {
+        $this->checkUser();
         $this->login();
     }
-    
+
+    /**
+     * Checking by social id if user already in our base
+     * if not - checking by email from social
+     * and if email already in base - just adding social id
+     * otherwise - register him
+     */
+    private function checkUser() {
+        $this->id = DB::run("SELECT id FROM users WHERE fb_id = ?", [$this->userData['id']])->fetchColumn();
+        if ($this->id === FALSE || is_null($this->id)) {
+            $this->email = DB::run("SELECT email FROM users WHERE email = ?", [$this->userData['email']])->fetchColumn();
+            if ($this->email === FALSE || is_null($this->email)) {
+                $this->registration();
+            } else {
+                $this->addSocial();
+            }
+        }
+    }
+
     /**
      * 
      * Set user's data in the session(login)
@@ -144,7 +158,18 @@ class fb {
         $_SESSION['user']['name'] = $this->userData['first_name'];
         header('Location:/');
     }
-    
+
+    /**
+     * 
+     * Add social ID to the user
+     * 
+     * @return void 
+     */
+    private function addSocial() {
+        $stmt = DB::run("UPDATE users SET fb_id = ?", [$this->userData['id']]);
+        $this->id = DB::lastInsertId();
+    }
+
     /**
      * 
      * Register a new user
@@ -160,4 +185,5 @@ class fb {
                     $this->userData['id']]);
         $this->id = DB::lastInsertId();
     }
+
 }

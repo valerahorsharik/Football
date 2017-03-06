@@ -54,7 +54,13 @@ class vk {
      * @var int
      */
     private $id = null;
-
+    
+    /**
+     * 
+     * Create an instance and call getAccessToken method
+     * 
+     * @param int $code Code for the request for user access token
+     */
     public function __construct($code) {
         $this->getAccessToken($code);
     }
@@ -140,7 +146,7 @@ class vk {
      * @return void
      */
     private function registration() {
-        $stmt = DB::run("INSERT INTO users VALUES(NULL,?,?,?,?,?)", [
+        $stmt = DB::run("INSERT INTO users VALUES(NULL,?,?,?,?,?,NULL)", [
                     $this->userData['first_name'],
                     $this->userData['last_name'],
                     $this->userData['email'],

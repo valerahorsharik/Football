@@ -83,7 +83,7 @@ class View {
     
     /**
      * 
-     * Set a new path for the header
+     * Set a new path for the main view
      * 
      * @param string $viewPath
      * 
